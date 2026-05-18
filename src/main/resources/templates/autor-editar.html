@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editar autor · Biblioteca</title>
+    <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+<body class="app">
+
+<th:block th:replace="~{fragments/navbar :: navbar('autores')}"></th:block>
+
+<main class="main">
+
+    <header class="page-top">
+        <p class="breadcrumb">Autores / Edición</p>
+        <h2>Modificar autor</h2>
+        <p>Actualiza la información y guarda los cambios.</p>
+    </header>
+
+    <section class="panel" style="max-width: 520px;">
+        <div class="panel-head">
+            <h3 th:text="${autor.nombre}">Autor</h3>
+            <span>Formulario de edición</span>
+        </div>
+        <div class="panel-body">
+            <form th:action="@{/autores/actualizar/{id}(id=${autor.id})}" method="post">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" th:value="${autor.nombre}" required>
+                </div>
+                <div class="form-group">
+                    <label>Nacionalidad</label>
+                    <input type="text" name="nacionalidad" th:value="${autor.nacionalidad}">
+                </div>
+                <div class="form-group">
+                    <label>Editorial</label>
+                    <select name="editorialId">
+                        <option value="">Ninguna</option>
+                        <option th:each="e : ${editoriales}"
+                                th:value="${e.id}"
+                                th:text="${e.nombre}"
+                                th:selected="${autor.editorial != null and autor.editorial.id == e.id}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <a href="/autores" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

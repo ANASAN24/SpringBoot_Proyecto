@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Autores · Biblioteca</title>
+    <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+<body class="app">
+
+<th:block th:replace="~{fragments/navbar :: navbar('autores')}"></th:block>
+
+<main class="main">
+
+    <header class="page-top">
+        <p class="breadcrumb">Personas</p>
+        <h2>Autores</h2>
+        <p>Mantén actualizado el listado de autores vinculados al catálogo de la biblioteca.</p>
+    </header>
+
+    <div class="layout-split">
+
+        <section class="panel">
+            <div class="panel-head">
+                <h3>Registrar autor</h3>
+                <span>Datos básicos del autor</span>
+            </div>
+            <div class="panel-body">
+                <form action="/autores/crear" method="post">
+                    <div class="form-group">
+                        <label>Nombre completo</label>
+                        <input type="text" name="nombre" placeholder="Nombre y apellidos" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nacionalidad</label>
+                        <input type="text" name="nacionalidad" placeholder="País de origen">
+                    </div>
+                    <div class="form-group">
+                        <label>Editorial asociada</label>
+                        <select name="editorialId">
+                            <option value="">Ninguna</option>
+                            <option th:each="e : ${editoriales}" th:value="${e.id}" th:text="${e.nombre}"></option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar autor</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <h3>Listado</h3>
+                <span>Todos los autores del sistema</span>
+            </div>
+            <div class="panel-body table-wrap">
+                <table class="data-table" th:if="${!autores.isEmpty()}">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Nacionalidad</th>
+                        <th>Editorial</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="a : ${autores}">
+                        <td th:text="${a.nombre}"></td>
+                        <td th:text="${a.nacionalidad != null ? a.nacionalidad : '—'}"></td>
+                        <td th:text="${a.editorial != null ? a.editorial.nombre : '—'}"></td>
+                        <td>
+                            <div class="acciones">
+                                <a th:href="@{/autores/editar/{id}(id=${a.id})}" class="btn btn-editar">Editar</a>
+                                <form th:action="@{/autores/eliminar/{id}(id=${a.id})}" method="post"
+                                      onsubmit="return confirm('¿Eliminar este autor?');">
+                                    <button type="submit" class="btn btn-eliminar">Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="empty-state" th:if="${autores.isEmpty()}">Aún no hay autores. Registra el primero en el formulario.</p>
+            </div>
+        </section>
+
+    </div>
+
+</main>
+</body>
+</html>

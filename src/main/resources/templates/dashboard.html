@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inicio · Biblioteca</title>
+    <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+<body class="app">
+
+<th:block th:replace="~{fragments/navbar :: navbar('inicio')}"></th:block>
+
+<main class="main">
+
+    <section class="welcome-banner">
+        <h2>Bienvenido al gestor de biblioteca</h2>
+        <p>Consulta el estado del inventario y accede a cada módulo para dar de alta, modificar o retirar registros del catálogo.</p>
+    </section>
+
+    <div class="stats-row">
+
+        <article class="stat-card autores">
+            <div class="stat-label">Autores registrados</div>
+            <div class="stat-number" th:text="${totalAutores}">0</div>
+            <a href="/autores" class="stat-link">Ir a autores →</a>
+        </article>
+
+        <article class="stat-card libros">
+            <div class="stat-label">Libros en catálogo</div>
+            <div class="stat-number" th:text="${totalLibros}">0</div>
+            <a href="/libros" class="stat-link">Ir a catálogo →</a>
+        </article>
+
+        <article class="stat-card editoriales">
+            <div class="stat-label">Editoriales</div>
+            <div class="stat-number" th:text="${totalEditoriales}">0</div>
+            <a href="/editoriales" class="stat-link">Ir a editoriales →</a>
+        </article>
+
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Accesos rápidos</h3>
+            <span>Operaciones habituales del administrador</span>
+        </div>
+        <div class="panel-body" style="display:flex; flex-wrap:wrap; gap:0.75rem;">
+            <a href="/libros" class="btn btn-primary">Añadir o revisar libros</a>
+            <a href="/autores" class="btn btn-secondary">Gestionar autores</a>
+            <a href="/editoriales" class="btn btn-secondary">Gestionar editoriales</a>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

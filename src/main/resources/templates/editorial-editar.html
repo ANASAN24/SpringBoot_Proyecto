@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editar editorial · Biblioteca</title>
+    <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+<body class="app">
+
+<th:block th:replace="~{fragments/navbar :: navbar('editoriales')}"></th:block>
+
+<main class="main">
+
+    <header class="page-top">
+        <p class="breadcrumb">Editoriales / Edición</p>
+        <h2>Modificar editorial</h2>
+        <p>Corrige los datos de la editorial seleccionada.</p>
+    </header>
+
+    <section class="panel" style="max-width: 520px;">
+        <div class="panel-head">
+            <h3 th:text="${editorial.nombre}">Editorial</h3>
+            <span>Formulario de edición</span>
+        </div>
+        <div class="panel-body">
+            <form th:action="@{/editoriales/actualizar/{id}(id=${editorial.id})}" method="post">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" th:value="${editorial.nombre}" required>
+                </div>
+                <div class="form-group">
+                    <label>País</label>
+                    <input type="text" name="pais" th:value="${editorial.pais}">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <a href="/editoriales" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catálogo · Biblioteca</title>
+    <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+<body class="app">
+
+<th:block th:replace="~{fragments/navbar :: navbar('libros')}"></th:block>
+
+<main class="main">
+
+    <header class="page-top">
+        <p class="breadcrumb">Inventario</p>
+        <h2>Catálogo de libros</h2>
+        <p>Registra nuevas entradas, actualiza datos o retira ejemplares que ya no estén disponibles.</p>
+    </header>
+
+    <div class="layout-split">
+
+        <section class="panel">
+            <div class="panel-head">
+                <h3>Nuevo libro</h3>
+                <span>Completa los datos del ejemplar</span>
+            </div>
+            <div class="panel-body">
+                <form action="/libros/crear" method="post">
+
+                    <div class="form-group">
+                        <label>Título</label>
+                        <input type="text" name="titulo" placeholder="Título del libro" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Autor</label>
+                        <select name="autorId">
+                            <option value="">Seleccionar autor</option>
+                            <option th:each="a : ${autores}" th:value="${a.id}" th:text="${a.nombre}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Editorial existente</label>
+                        <select name="editorialId">
+                            <option value="">Seleccionar editorial</option>
+                            <option th:each="e : ${editoriales}" th:value="${e.id}" th:text="${e.nombre}"></option>
+                        </select>
+                        <p class="hint">Si no aparece en la lista, indícala abajo.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nueva editorial</label>
+                        <input type="text" name="nuevaEditorial" placeholder="Nombre de la editorial">
+                    </div>
+
+                    <div class="form-group">
+                        <label>URL de portada</label>
+                        <input type="text" name="imagenUrl" placeholder="https://...">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar libro</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <h3>Libros en stock</h3>
+                <span th:text="${#lists.size(libros)} + ' títulos en el sistema'">0 títulos</span>
+            </div>
+            <div class="panel-body">
+                <div class="books-grid" th:if="${!libros.isEmpty()}">
+                    <article class="book-card" th:each="l : ${libros}">
+                        <div class="book-cover">
+                            <img th:if="${l.imagenUrl != null and !l.imagenUrl.isEmpty()}"
+                                 th:src="${l.imagenUrl}" th:alt="${l.titulo}">
+                            <span th:unless="${l.imagenUrl != null and !l.imagenUrl.isEmpty()}"
+                                  class="book-cover-placeholder" style="font-size:0.75rem;font-family:IBM Plex Sans,sans-serif;letter-spacing:0.05em;">SIN PORTADA</span>
+                        </div>
+                        <div class="book-body">
+                            <h4 class="book-title" th:text="${l.titulo}"></h4>
+                            <p class="book-meta"><strong>Autor:</strong> <span th:text="${l.autor != null ? l.autor.nombre : '—'}"></span></p>
+                            <p class="book-meta"><strong>Editorial:</strong> <span th:text="${l.editorial != null ? l.editorial.nombre : 'Sin asignar'}"></span></p>
+                            <div class="book-actions">
+                                <a th:href="@{/libros/editar/{id}(id=${l.id})}" class="btn btn-editar">Editar</a>
+                                <form th:action="@{/libros/eliminar/{id}(id=${l.id})}" method="post"
+                                      onsubmit="return confirm('¿Retirar este libro del catálogo?');">
+                                    <button type="submit" class="btn btn-eliminar">Eliminar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <p class="empty-state" th:if="${libros.isEmpty()}">No hay libros registrados. Añade el primero con el formulario.</p>
+            </div>
+        </section>
+
+    </div>
+
+</main>
+</body>
+</html>

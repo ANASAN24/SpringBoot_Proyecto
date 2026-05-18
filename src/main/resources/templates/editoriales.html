@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editoriales · Biblioteca</title>
+    <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+<body class="app">
+
+<th:block th:replace="~{fragments/navbar :: navbar('editoriales')}"></th:block>
+
+<main class="main">
+
+    <header class="page-top">
+        <p class="breadcrumb">Publicaciones</p>
+        <h2>Editoriales</h2>
+        <p>Administra las casas editoras con las que trabaja la biblioteca.</p>
+    </header>
+
+    <div class="layout-split">
+
+        <section class="panel">
+            <div class="panel-head">
+                <h3>Nueva editorial</h3>
+                <span>Alta en el sistema</span>
+            </div>
+            <div class="panel-body">
+                <form action="/editoriales/crear" method="post">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" name="nombre" placeholder="Nombre comercial" required>
+                    </div>
+                    <div class="form-group">
+                        <label>País</label>
+                        <input type="text" name="pais" placeholder="País de sede">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar editorial</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <h3>Directorio</h3>
+                <span>Editoriales registradas</span>
+            </div>
+            <div class="panel-body table-wrap">
+                <table class="data-table" th:if="${!editoriales.isEmpty()}">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>País</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="e : ${editoriales}">
+                        <td th:text="${e.nombre}"></td>
+                        <td th:text="${e.pais != null ? e.pais : '—'}"></td>
+                        <td>
+                            <div class="acciones">
+                                <a th:href="@{/editoriales/editar/{id}(id=${e.id})}" class="btn btn-editar">Editar</a>
+                                <form th:action="@{/editoriales/eliminar/{id}(id=${e.id})}" method="post"
+                                      onsubmit="return confirm('¿Eliminar esta editorial?');">
+                                    <button type="submit" class="btn btn-eliminar">Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="empty-state" th:if="${editoriales.isEmpty()}">No hay editoriales registradas.</p>
+            </div>
+        </section>
+
+    </div>
+
+</main>
+</body>
+</html>
