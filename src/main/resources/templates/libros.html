@@ -26,6 +26,10 @@
                 <span>Completa los datos del ejemplar</span>
             </div>
             <div class="panel-body">
+                <div th:if="${error}"
+                     style="margin-bottom:1rem; padding:10px; background:#ffebee; color:#c62828; border-radius:6px;">
+                    <span th:text="${error}"></span>
+                </div>
                 <form action="/libros/crear" method="post" enctype="multipart/form-data">
 
                     <div class="form-group">
@@ -47,6 +51,27 @@
                             <option value="">Seleccionar editorial</option>
                             <option th:each="e : ${editoriales}" th:value="${e.id}" th:text="${e.nombre}"></option>
                         </select>
+                    </div>
+
+                    <div class="grid-2">
+
+                        <div class="form-group">
+                            <label>ISBN</label>
+
+                            <input type="text"
+                                   name="isbn"
+                                   placeholder="978..."
+                                   required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Páginas</label>
+
+                            <input type="number"
+                                   name="paginas"
+                                   placeholder="Número de páginas" required min="1">
+                        </div>
+
                     </div>
 
                     <div class="form-group">
@@ -71,37 +96,80 @@
             </div>
             <div class="panel-body">
 
-                <form id="filtroAutorForm" style="margin-bottom:1rem; display:flex; gap:0.5rem;">
+                <!-- ===================== FILTROS DE LIBROS ===================== -->
+                <section style="margin-bottom:1rem; display:flex; flex-direction:column; gap:0.8rem;">
 
-                    <select id="autorSelect" class="btn btn-secondary">
-                        <option value="">Filtrar por autor</option>
+                    <!-- FILTRO POR AUTOR -->
+                    <form id="filtroAutorForm" style="display:flex; gap:0.5rem; align-items:center;">
+                        <select id="autorSelect" class="btn btn-secondary">
+                            <option value="">Filtrar por autor</option>
+                            <option th:each="a : ${autores}"
+                                    th:value="${a.id}"
+                                    th:text="${a.nombre}">
+                            </option>
+                        </select>
 
-                        <option th:each="a : ${autores}"
-                                th:value="${a.id}"
-                                th:text="${a.nombre}">
-                        </option>
-                    </select>
+                        <button type="button"
+                                class="btn btn-primary"
+                                onclick="filtrarAutor()">
+                            Buscar
+                        </button>
+                    </form>
 
-                    <button type="button"
-                            class="btn btn-primary"
-                            onclick="filtrarAutor()">
-                        Buscar
-                    </button>
-
-                    <a href="/libros" class="btn btn-secondary">Todos</a>
-
-                </form>
-
-                <script>
-                    function filtrarAutor() {
-
-                        const id = document.getElementById("autorSelect").value;
-
-                        if(id) {
-                            window.location.href = "/libros/autor/" + id;
+                    <script>
+                        function filtrarAutor() {
+                            const id = document.getElementById("autorSelect").value;
+                            if(id) window.location.href = "/libros/autor/" + id;
                         }
-                    }
-                </script>
+                    </script>
+
+
+                    <!-- FILTRO POR EDITORIAL -->
+                    <form id="filtroEditorialForm" style="display:flex; gap:0.5rem; align-items:center;">
+                        <select id="editorialSelect" class="btn btn-secondary">
+                            <option value="">Filtrar por editorial</option>
+                            <option th:each="e : ${editoriales}"
+                                    th:value="${e.id}"
+                                    th:text="${e.nombre}">
+                            </option>
+                        </select>
+
+                        <button type="button"
+                                class="btn btn-primary"
+                                onclick="filtrarEditorial()">
+                            Buscar
+                        </button>
+                    </form>
+
+                    <script>
+                        function filtrarEditorial() {
+                            const id = document.getElementById("editorialSelect").value;
+                            if(id) window.location.href = "/libros/editorial/" + id;
+                        }
+                    </script>
+
+
+                    <!-- BUSCADOR POR TÍTULO -->
+                    <form action="/libros/buscar" method="get" style="display:flex; gap:0.5rem;">
+                        <input type="text"
+                               name="titulo"
+                               placeholder="Buscar libro...">
+
+                        <button type="submit" class="btn btn-primary">
+                            Buscar
+                        </button>
+                    </form>
+
+                </section>
+
+                <!-- BOTÓN GLOBAL -->
+                <div style="margin-top:0.5rem;">
+                    <a href="/libros" class="btn btn-secondary">
+                        Reset filtros
+                    </a>
+                </div>
+
+                <br>
 
                 <div class="books-grid" th:if="${!libros.isEmpty()}">
                     <article class="book-card" th:each="l : ${libros}">
@@ -115,6 +183,11 @@
                             <h4 class="book-title" th:text="${l.titulo}"></h4>
                             <p class="book-meta"><strong>Autor:</strong> <span th:text="${l.autor != null ? l.autor.nombre : '—'}"></span></p>
                             <p class="book-meta"><strong>Editorial:</strong> <span th:text="${l.editorial != null ? l.editorial.nombre : 'Sin asignar'}"></span></p>
+                            <p class="book-meta"><strong>ISBN:</strong> <span th:text="${l.isbn != null ? l.isbn : '—'}"></span>
+                            </p>
+                            <p class="book-meta"><strong>Páginas:</strong> <span th:text="${l.paginas != null ? l.paginas : '—'}"></span>
+                            </p>
+
                             <div class="book-actions">
                                 <a th:href="@{/libros/editar/{id}(id=${l.id})}" class="btn btn-editar">Editar</a>
                                 <form th:action="@{/libros/eliminar/{id}(id=${l.id})}" method="post"

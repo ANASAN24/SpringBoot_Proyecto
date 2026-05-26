@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.alumnos.service.CloudinaryService;
 import com.example.alumnos.entity.Autor;
@@ -44,7 +45,7 @@ public class LibroWebController {
     @GetMapping()
     public String verLibros(Model model) {
 
-        model.addAttribute("libros", libroRepository.findAll());
+        model.addAttribute("libros", libroRepository.findAllByOrderByTituloAsc());
         model.addAttribute("autores", autorRepository.findAll());
         model.addAttribute("editoriales", editorialRepository.findAll());
 
@@ -56,7 +57,10 @@ public class LibroWebController {
     public String crearLibro(@RequestParam String titulo,
                              @RequestParam Long autorId,
                              @RequestParam Long editorialId,
-                             @RequestParam("imagen") MultipartFile imagen) {
+                             @RequestParam String isbn,
+                             @RequestParam(required = false) Integer paginas,
+                             @RequestParam("imagen") MultipartFile imagen,
+                             RedirectAttributes redirectAttributes){
 
         Autor autor = autorRepository.findById(autorId).orElse(null);
         Editorial editorial = editorialRepository.findById(editorialId).orElse(null);
@@ -65,6 +69,14 @@ public class LibroWebController {
         libro.setTitulo(titulo);
         libro.setAutor(autor);
         libro.setEditorial(editorial);
+        libro.setIsbn(isbn);
+        libro.setPaginas(paginas);
+
+        if (libroRepository.existsByIsbn(isbn)) {
+            redirectAttributes.addFlashAttribute("error", "Ya existe un libro con ese ISBN");
+            return "redirect:/libros";
+        }
+
         try {
 
             if (!imagen.isEmpty()) {
@@ -167,14 +179,26 @@ public class LibroWebController {
     }
 
     @GetMapping("/editorial/{id}")
-    @ResponseBody
-    public java.util.List<Libro> librosPorEditorial(@PathVariable Long id) {
+    public String filtrarPorEditorial(@PathVariable Long id, Model model) {
 
-        return libroRepository.findAll()
-                .stream()
-                .filter(libro ->
-                        libro.getEditorial() != null &&
-                                libro.getEditorial().getId().equals(id))
-                .toList();
+        model.addAttribute("libros",
+                libroRepository.findByEditorialId(id));
+
+        model.addAttribute("autores", autorRepository.findAll());
+        model.addAttribute("editoriales", editorialRepository.findAll());
+
+        return "libros";
+    }
+
+    @GetMapping("/buscar")
+    public String buscarPorTitulo(@RequestParam String titulo, Model model) {
+
+        model.addAttribute("libros",
+                libroRepository.findByTituloContainingIgnoreCase(titulo));
+
+        model.addAttribute("autores", autorRepository.findAll());
+        model.addAttribute("editoriales", editorialRepository.findAll());
+
+        return "libros";
     }
 }

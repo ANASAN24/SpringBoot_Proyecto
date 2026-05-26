@@ -24,4 +24,10 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
     @RestResource(path = "por-editorial", rel = "por-editorial")
     List<Libro> findByEditorialId(@Param("id") Long id);
 
+    List<Libro> findAllByOrderByTituloAsc();
+
+    List<Libro> findByTituloContainingIgnoreCase(String titulo);
+
+    boolean existsByIsbn(String isbn);
+
 }
