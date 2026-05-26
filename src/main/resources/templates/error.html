@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Error</title>
+
+  <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+
+<body class="app">
+
+<main class="main"
+      style="display:flex; justify-content:center; align-items:center; margin-left:0;">
+
+  <section class="panel" style="max-width: 600px; text-align:center;">
+
+    <div class="panel-head">
+      <h3>⚠ Operación no permitida</h3>
+      <span>El sistema ha bloqueado esta acción</span>
+    </div>
+
+    <div class="panel-body">
+
+      <p style="margin-bottom:1.5rem; color: var(--color-ink-soft); font-size:0.95rem;"
+         th:text="${error}">
+        Ha ocurrido un error
+      </p>
+
+      <a href="/" class="btn btn-primary">Volver al inicio</a>
+
+    </div>
+
+  </section>
+
+</main>
+
+</body>
+</html>

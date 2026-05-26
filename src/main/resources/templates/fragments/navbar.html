@@ -1,0 +1,632 @@
+<!-- Sistema visual compartido del gestor de biblioteca -->
+<th:block th:fragment="estilos-globales">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-w: 248px;
+            --color-ink: #1f1a17;
+            --color-ink-soft: #5c524a;
+            --color-ink-muted: #8a8178;
+            --color-paper: #f3efe6;
+            --color-paper-deep: #e8e2d6;
+            --color-surface: #fcfbf8;
+            --color-sidebar: #242019;
+            --color-sidebar-hover: #322c24;
+            --color-accent: #9a4f2a;
+            --color-accent-soft: #c4724a;
+            --color-accent-bg: rgba(154, 79, 42, 0.12);
+            --color-line: #d9d0c4;
+            --color-success: #2f6b52;
+            --color-danger: #a33d3d;
+            --color-danger-bg: #fceeed;
+            --shadow-sm: 0 1px 2px rgba(31, 26, 23, 0.06);
+            --shadow-md: 0 8px 24px rgba(31, 26, 23, 0.08);
+            --radius: 10px;
+            --radius-lg: 14px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body.app {
+            font-family: "IBM Plex Sans", system-ui, sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--color-ink);
+            background: var(--color-paper);
+            min-height: 100vh;
+        }
+
+        /* —— Sidebar —— */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--color-sidebar);
+            color: #e8e0d4;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            border-right: 1px solid #3a332b;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem 1.25rem 1.25rem;
+            border-bottom: 1px solid #3a332b;
+        }
+
+        .sidebar-brand .logo-mark {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(145deg, var(--color-accent-soft), var(--color-accent));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Fraunces", Georgia, serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar-brand h1 {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #f5f0e8;
+            line-height: 1.25;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.75rem;
+            color: #a89f92;
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.65rem 0.85rem;
+            color: #c4bab0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--color-sidebar-hover);
+            color: #f5f0e8;
+        }
+
+        .sidebar-nav a.activo {
+            background: var(--color-accent-bg);
+            color: #f0dcc8;
+            box-shadow: inset 3px 0 0 var(--color-accent-soft);
+        }
+
+        .nav-icon {
+            width: 1.25rem;
+            text-align: center;
+            opacity: 0.85;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-foot {
+            padding: 1rem 1.25rem;
+            font-size: 0.7rem;
+            color: #7a7268;
+            border-top: 1px solid #3a332b;
+        }
+
+        /* —— Área principal —— */
+        .main {
+            margin-left: var(--sidebar-w);
+            min-height: 100vh;
+            padding: 2rem 2.25rem 3rem;
+        }
+
+        .page-top {
+            margin-bottom: 1.75rem;
+        }
+
+        .page-top h2 {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--color-ink);
+        }
+
+        .page-top p {
+            margin-top: 0.35rem;
+            color: var(--color-ink-soft);
+            font-size: 0.95rem;
+            max-width: 42rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--color-ink-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 500;
+        }
+
+        /* —— Tarjetas y paneles —— */
+        .panel {
+            background: var(--color-surface);
+            border: 1px solid var(--color-line);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .panel-head {
+            padding: 1.1rem 1.35rem;
+            border-bottom: 1px solid var(--color-line);
+            background: linear-gradient(180deg, #fff 0%, var(--color-surface) 100%);
+        }
+
+        .panel-head h3 {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-ink);
+        }
+
+        .panel-head span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--color-ink-muted);
+            margin-top: 0.15rem;
+            font-family: "IBM Plex Sans", sans-serif;
+            font-weight: 400;
+        }
+
+        .panel-body {
+            padding: 1.35rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem 1.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                flex-direction: column;
+            }
+            .sidebar-brand { padding: 1rem; }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 0 0.75rem 0.75rem;
+            }
+            .sidebar-nav a { flex: 1 1 auto; min-width: 7rem; justify-content: center; }
+            .sidebar-foot { display: none; }
+            .main { margin-left: 0; padding: 1.25rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .layout-split { grid-template-columns: 1fr; }
+        }
+
+        /* —— Formularios —— */
+        .form-group {
+            margin-bottom: 1.1rem;
+        }
+
+        .form-group:last-child { margin-bottom: 0; }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--color-ink-soft);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--color-ink);
+            background: #fff;
+            border: 1px solid var(--color-line);
+            border-radius: var(--radius);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--color-accent-soft);
+            box-shadow: 0 0 0 3px var(--color-accent-bg);
+        }
+
+        .hint {
+            margin-top: 0.35rem;
+            font-size: 0.8rem;
+            color: var(--color-ink-muted);
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--color-line);
+        }
+
+        /* —— Botones —— */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.15rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #7d4222;
+        }
+
+        .btn-secondary {
+            background: var(--color-paper-deep);
+            color: var(--color-ink);
+            border: 1px solid var(--color-line);
+        }
+
+        .btn-secondary:hover {
+            background: #ddd6c8;
+        }
+
+        .btn-editar {
+            background: #fff;
+            color: var(--color-accent);
+            border: 1px solid var(--color-accent-soft);
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-editar:hover {
+            background: var(--color-accent-bg);
+        }
+
+        .btn-eliminar {
+            background: var(--color-danger-bg);
+            color: var(--color-danger);
+            border: 1px solid #e8c4c4;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-eliminar:hover {
+            background: #f5dede;
+        }
+
+        /* —— Tablas —— */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-ink-muted);
+            background: var(--color-paper-deep);
+            border-bottom: 1px solid var(--color-line);
+        }
+
+        .data-table tbody td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--color-line);
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr:hover td {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* —— Catálogo de libros —— */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .book-card {
+            background: #fff;
+            border: 1px solid var(--color-line);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .book-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .book-cover {
+            aspect-ratio: 3 / 4;
+            background: linear-gradient(160deg, #e8dfd0 0%, #d4c4b0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-cover-placeholder {
+            font-family: "Fraunces", serif;
+            font-size: 2.5rem;
+            color: rgba(154, 79, 42, 0.35);
+        }
+
+        .book-body {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+            color: var(--color-ink);
+        }
+
+        .book-meta {
+            font-size: 0.8rem;
+            color: var(--color-ink-soft);
+            margin-bottom: 0.25rem;
+        }
+
+        .book-meta strong {
+            color: var(--color-ink-muted);
+            font-weight: 500;
+        }
+
+        .book-actions {
+            margin-top: auto;
+            padding-top: 0.85rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* —— Dashboard stats —— */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .stats-row { grid-template-columns: 1fr; }
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-line);
+            border-radius: var(--radius-lg);
+            padding: 1.35rem;
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--stat-accent, var(--color-accent));
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card.libros { --stat-accent: #9a4f2a; }
+        .stat-card.autores { --stat-accent: #4a6741; }
+        .stat-card.editoriales { --stat-accent: #5c5a8a; }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--color-ink-muted);
+        }
+
+        .stat-number {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 2.75rem;
+            font-weight: 600;
+            line-height: 1.1;
+            margin: 0.35rem 0 0.75rem;
+            color: var(--color-ink);
+        }
+
+        .stat-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .stat-link:hover {
+            text-decoration: underline;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #3d342c 0%, #242019 55%, #1a1614 100%);
+            color: #f0e8dc;
+            border-radius: var(--radius-lg);
+            padding: 2rem 2.25rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::after {
+            content: "";
+            position: absolute;
+            right: -2rem;
+            top: -2rem;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(196, 114, 74, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .welcome-banner h2 {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 1.65rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            margin-top: 0.5rem;
+            color: #c4bab0;
+            font-size: 0.95rem;
+            max-width: 32rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .layout-split {
+            display: grid;
+            grid-template-columns: minmax(280px, 380px) 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .layout-split { grid-template-columns: 1fr; }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: var(--color-ink-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</th:block>
+
+<!-- alias por compatibilidad con plantillas antiguas -->
+<th:block th:fragment="estilos-navbar" th:replace="~{:: estilos-globales}"></th:block>
+
+<aside class="sidebar" th:fragment="navbar(paginaActiva)">
+    <div class="sidebar-brand">
+        <div class="logo-mark">B</div>
+        <h1>Biblioteca</h1>
+        <p>Panel de administración</p>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="/" th:classappend="${paginaActiva == 'inicio'} ? 'activo' : ''">
+            <span class="nav-icon">◫</span> Inicio
+        </a>
+        <a href="/libros" th:classappend="${paginaActiva == 'libros'} ? 'activo' : ''">
+            <span class="nav-icon">▤</span> Catálogo
+        </a>
+        <a href="/autores" th:classappend="${paginaActiva == 'autores'} ? 'activo' : ''">
+            <span class="nav-icon">✎</span> Autores
+        </a>
+        <a href="/editoriales" th:classappend="${paginaActiva == 'editoriales'} ? 'activo' : ''">
+            <span class="nav-icon">⌂</span> Editoriales
+        </a>
+    </nav>
+
+    <!-- ESTO ES EL LOGOUT SALIR DEL SECURITY -->
+    <div class="sidebar-foot">
+        Gestor interno · Inventario
+
+        <form th:action="@{/logout}" method="post" style="margin-top:10px;">
+            <button type="submit" class="btn btn-eliminar" style="width:100%;">
+                Cerrar sesión
+            </button>
+        </form>
+    </div>
+
+</aside>

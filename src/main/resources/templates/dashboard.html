@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inicio · Biblioteca</title>
+    <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+<body class="app">
+
+<th:block th:replace="~{fragments/navbar :: navbar('inicio')}"></th:block>
+
+<main class="main">
+
+    <section class="welcome-banner">
+        <h2>Bienvenido al gestor de biblioteca</h2>
+        <p>Consulta el estado del inventario y accede a cada módulo para dar de alta, modificar o retirar registros del catálogo.</p>
+    </section>
+
+    <div class="stats-row">
+
+        <article class="stat-card autores">
+            <div class="stat-label">Autores registrados</div>
+            <div class="stat-number" th:text="${totalAutores}">0</div>
+            <a href="/autores" class="stat-link">Ver autores →</a>
+        </article>
+
+        <article class="stat-card libros">
+            <div class="stat-label">Libros en catálogo</div>
+            <div class="stat-number" th:text="${totalLibros}">0</div>
+            <a href="/libros" class="stat-link">Ver catálogo →</a>
+        </article>
+
+        <article class="stat-card editoriales">
+            <div class="stat-label">Editoriales</div>
+            <div class="stat-number" th:text="${totalEditoriales}">0</div>
+            <a href="/editoriales" class="stat-link">Ver editoriales →</a>
+        </article>
+
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Información</h3>
+        </div>
+
+        <div class="panel-body">
+            <p>Aplicación desarrollada con Spring Boot, Thymeleaf y Supabase.</p>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

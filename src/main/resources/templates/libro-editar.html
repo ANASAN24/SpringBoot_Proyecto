@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editar libro · Biblioteca</title>
+    <th:block th:replace="~{fragments/navbar :: estilos-globales}"></th:block>
+</head>
+<body class="app">
+
+<th:block th:replace="~{fragments/navbar :: navbar('libros')}"></th:block>
+
+<main class="main">
+
+    <header class="page-top">
+        <p class="breadcrumb">Catálogo / Edición</p>
+        <h2>Modificar libro</h2>
+        <p th:text="'Editando: ' + ${libro.titulo}">Editando título</p>
+    </header>
+
+    <section class="panel" style="max-width: 640px;">
+        <div class="panel-head">
+            <h3>Ficha del libro</h3>
+            <span>Todos los campos son editables</span>
+        </div>
+        <div class="panel-body">
+            <form th:action="@{/libros/actualizar/{id}(id=${libro.id})}" method="post" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" name="titulo" th:value="${libro.titulo}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Autor</label>
+                    <select name="autorId" required>
+                        <option th:each="a : ${autores}"
+                                th:value="${a.id}"
+                                th:text="${a.nombre}"
+                                th:selected="${libro.autor != null and libro.autor.id == a.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Editorial existente</label>
+
+                        <select name="editorialId" required>
+                            <option value="">Selecciona editorial</option>
+                            <option th:each="e : ${editoriales}"
+                                    th:value="${e.id}"
+                                    th:text="${e.nombre}"
+                                    th:selected="${libro.editorial != null and libro.editorial.id == e.id}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>ISBN</label>
+                        <input type="text" name="isbn" th:value="${libro.isbn}">
+                    </div>
+                    <div class="form-group">
+                        <label>Páginas</label>
+                        <input type="number" name="paginas" th:value="${libro.paginas}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label>Nueva portada</label>
+
+                    <input type="file"
+                           name="imagen"
+                           accept="image/*">
+
+                </div>
+
+                <div class="form-group" th:if="${libro.imagenUrl != null}">
+
+                    <label>Portada actual</label>
+
+                    <img th:src="${libro.imagenUrl}"
+                         style="width:140px; border-radius:10px; border:1px solid #ccc;">
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <a href="/libros" class="btn btn-secondary">Volver al catálogo</a>
+                </div>
+            </form>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>
